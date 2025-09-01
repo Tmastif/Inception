@@ -1,4 +1,21 @@
 services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    env_file:
+      - .env
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - inception
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MARIADB_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  
   nginx:
     build: ./requirements/nginx
     container_name: nginx
@@ -14,24 +31,14 @@ services:
 
   wordpress:
     build: ./requirements/wordpress
-    container_name: wp-php
+    container_name: wordpress
     env_file:
       - .env
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     volumes:
       - wordpress:/var/www/html
-    networks:
-      - inception
-    restart: always
-
-  mariadb:
-    build: ./requirements/mariadb
-    container_name: mariadb
-    env_file:
-      - .env
-    volumes:
-      - mariadb:/var/lib/mysql
     networks:
       - inception
     restart: always
