@@ -6,7 +6,7 @@
 #    By: ilazar <ilazar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/26 15:32:02 by ilazar            #+#    #+#              #
-#    Updated: 2025/09/02 22:56:02 by ilazar           ###   ########.fr        #
+#    Updated: 2025/09/02 23:20:03 by ilazar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,10 +64,17 @@ folders :
 
 # Verfiy if folders exist on host
 checkfolders :
-	@ls -la /home/$(USER)/data/web
-	@ls -la /home/$(USER)/data/database
-	@if [ ! -d "/home/$(USER)/data/web" -a ! -d "/home/$(USER)/data/database" ]; then \
-		echo "The folders do not exist"; \
+	@if [ ! -d "/home/$(USER)/data/web" ]; then \
+		echo "Web folder doesn't exist"; \
+	else \
+		echo "##Web##"; \
+		ls -la "/home/$(USER)/data/web"; \
+	fi
+	@if [ ! -d "/home/$(USER)/data/database" ]; then \
+			echo "Database folder doesn't exist"; \
+	else \
+		echo "##Database##"; \
+		ls -la "/home/$(USER)/data/database"; \
 	fi
 
 # Full build of folders and containers as new
