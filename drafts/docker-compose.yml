@@ -1,3 +1,4 @@
+#with helth check dep
 services:
   mariadb:
     build: ./requirements/mariadb
@@ -9,12 +10,12 @@ services:
     networks:
       - inception
     restart: always
-    #healthcheck:
-    #  test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MARIADB_ROOT_PASSWORD"]
-    #  interval: 10s
-    #  timeout: 5s
-    #  retries: 5
-    #  start_period: 30s
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MARIADB_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
   
   nginx:
     build: ./requirements/nginx
@@ -35,8 +36,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - mariadb
-     #   condition: service_healthy
+      mariadb:
+        condition: service_healthy
     volumes:
       - wordpress:/var/www/html
     networks:

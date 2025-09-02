@@ -1,18 +1,15 @@
 #!/bin/sh
 
-#echo "Waiting for MariaDB to be fully ready..."
-# The `until` loop checks for both a network connection and successful authentication.
-#until /usr/bin/mariadb-admin ping -h mariadb -u "$DB_USER" -p"$DB_PASSWORD" --silent; do
-#    echo "MariaDB is not yet ready. Waiting..."
-#    sleep 2
-#done
-#echo "MariaDB is ready."
-
-#!/bin/sh
+echo "Waiting for MariaDB to be fully ready..."
+until mariadb -h mariadb -u "$DB_USER" -p"$DB_PASSWORD" --ssl=0 -e "SELECT 1" &>/dev/null; do
+    echo "MariaDB is not yet ready. Waiting..."
+    sleep 2
+done
+echo "MariaDB is ready."
 
 cd /var/www/html || exit 1  # Fail early if cd fails
 
-if ! /usr/bin/php82 /usr/local/bin/wp core is-installed --allow-root 2>/dev/null; then
+if ! /usr/bin/php82 /usr/local/bin/wp core is-installed --allow-root &>/dev/null; then
     echo "Installing WordPress..."
 
     # Download and configure WordPress core using wp-cli
@@ -33,14 +30,10 @@ if ! /usr/bin/php82 /usr/local/bin/wp core is-installed --allow-root 2>/dev/null
         --skip-email \
         --allow-root
 
-    if [ -f wp-config.php ]; then
-        echo "Patching wp-config.php by appending necessary lines..."
-
-        echo "" >> wp-config.php
-        echo "define( 'MYSQL_CLIENT_FLAGS', 0 );" >> wp-config.php
-        echo "define('WP_HOME', 'https://${DOMAIN_NAME}');" >> wp-config.php
-        echo "define('WP_SITEURL', 'https://${DOMAIN_NAME}');" >> wp-config.php
-    fi
+    #echo "Setting necessary wp-config.php values..."
+    #/usr/bin/php82 /usr/local/bin/wp config set MYSQL_CLIENT_FLAGS 0 --allow-root &>/dev/null
+    #/usr/bin/php82 /usr/local/bin/wp config set WP_HOME "https://${DOMAIN_NAME}" --allow-root &>/dev/null
+    #/usr/bin/php82 /usr/local/bin/wp config set WP_SITEURL "https://${DOMAIN_NAME}" --allow-root &>/dev/null
 
 else
     echo "WordPress is already installed."
@@ -48,3 +41,5 @@ fi
 
 echo "Starting php-fpm."
 exec /usr/sbin/php-fpm82 -F
+
+

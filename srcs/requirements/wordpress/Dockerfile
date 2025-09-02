@@ -12,6 +12,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     mv wp-cli.phar /usr/local/bin/wp
 
 COPY ./conf/www.conf /etc/php82/php-fpm.d/www.conf
+# Define a higher memory_limit
 COPY ./conf/php.ini /etc/php82/php.ini
 COPY ./tools/script.sh /script.sh
 
