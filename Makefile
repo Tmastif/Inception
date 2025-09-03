@@ -6,7 +6,7 @@
 #    By: ilazar <ilazar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/26 15:32:02 by ilazar            #+#    #+#              #
-#    Updated: 2025/09/02 23:20:03 by ilazar           ###   ########.fr        #
+#    Updated: 2025/09/03 14:39:17 by ilazar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,5 +86,7 @@ upfull : folders
 restart : downfull
 	make upfull
 
-exwp :
-	@docker compose -f ./srcs/docker-compose.yml exec -it wordpress sh
+
+# Debugging:
+#exwp :
+#	@docker compose -f ./srcs/docker-compose.yml exec -it wordpress sh

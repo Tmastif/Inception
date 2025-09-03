@@ -30,10 +30,12 @@ if ! /usr/bin/php82 /usr/local/bin/wp core is-installed --allow-root &>/dev/null
         --skip-email \
         --allow-root
 
-    #echo "Setting necessary wp-config.php values..."
-    #/usr/bin/php82 /usr/local/bin/wp config set MYSQL_CLIENT_FLAGS 0 --allow-root &>/dev/null
-    #/usr/bin/php82 /usr/local/bin/wp config set WP_HOME "https://${DOMAIN_NAME}" --allow-root &>/dev/null
-    #/usr/bin/php82 /usr/local/bin/wp config set WP_SITEURL "https://${DOMAIN_NAME}" --allow-root &>/dev/null
+    # Create a 2nd user
+    /usr/bin/php82 /usr/local/bin/wp user create \
+    "${WP_USER}" "${WP_USER_EMAIL}" \
+    --user_pass="${WP_USER_PASSWORD}" \
+    --role=subscriber \
+    --allow-root
 
 else
     echo "WordPress is already installed."
