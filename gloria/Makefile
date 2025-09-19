@@ -11,19 +11,30 @@
 # **************************************************************************** #
 
 
+
+SECRETS := \
+if [ ! -f ./srcs/.env ] || [ ! -d ./secrets/ ]; then \
+	echo "secrets and or .env is missing. Provide these files and try again"; \
+	exit 1; \
+fi
+
 all : up
 
 up : 
-	@docker compose -f ./srcs/docker-compose.yml up -d
+	@$(SECRETS)
+	docker compose -f ./srcs/docker-compose.yml up -d
 
 down : 
-	@docker compose -f ./srcs/docker-compose.yml down
+	@$(SECRETS)
+	docker compose -f ./srcs/docker-compose.yml down
 
-stop : 
-	@docker compose -f ./srcs/docker-compose.yml stop
+stop :
+	@$(SECRETS)
+	docker compose -f ./srcs/docker-compose.yml stop
 
 start : 
-	@docker compose -f ./srcs/docker-compose.yml start
+	@$(SECRETS)
+	docker compose -f ./srcs/docker-compose.yml start
 
 status : 
 	@docker ps
@@ -41,7 +52,7 @@ clean :
 
 # Full delete. inc folders on host. inc unused containers
 downfull :
-	@docker compose -f ./srcs/docker-compose.yml down -v
+	make down
 	@echo "Deleting web and database folders..."
 	@sudo rm -rf /home/$(USER)/data/web /home/$(USER)/data/database
 	make clean
@@ -77,10 +88,23 @@ checkfolders :
 		ls -la "/home/$(USER)/data/database"; \
 	fi
 
+
+secrets :
+	@echo "Copying the secrets folder and .env file"
+	@cp -r ~/secrets/ .
+	@mv ./secrets/.env ./srcs/.env
+	@ls -l && ls -la ./srcs/
+
+delsecrets :
+	@echo "Deleting secrets folder and .env file"
+	@rm -rf ./secrets && rm ./srcs/.env
+	@ls -l && ls -la ./srcs
+
 # Full build of folders and containers as new
 upfull : folders
-	@docker compose -f ./srcs/docker-compose.yml build --no-cache
-	make up
+	@$(SECRETS)
+	docker compose -f ./srcs/docker-compose.yml build --no-cache
+	@make up
 
 # Full clean and build of folders and containers as new
 restart : downfull

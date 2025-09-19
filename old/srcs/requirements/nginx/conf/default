@@ -3,9 +3,9 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-	ssl_certificate /etc/nginx/certs/nginx-selfsigned.crt;
+	ssl_certificate /etc/nginx/ssl/nginx.crt;
 
-	ssl_certificate_key /etc/nginx/certs/nginx-selfsigned.key;
+	ssl_certificate_key /etc/nginx/ssl/nginx.key;
 
 	ssl_protocols TLSv1.2 TLSv1.3;
 

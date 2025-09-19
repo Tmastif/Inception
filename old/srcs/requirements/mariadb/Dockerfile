@@ -21,4 +21,4 @@ EXPOSE 3306
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # The command to be executed by your entrypoint
-CMD ["mysqld_safe", "--datadir=/var/lib/mysql"]
+CMD ["mariadbd"]
