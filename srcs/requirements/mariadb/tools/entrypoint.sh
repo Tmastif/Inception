@@ -21,5 +21,11 @@ mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';"
 # Reload privileges immediately
 mysql -u root -e "FLUSH PRIVILEGES;"
 
-# Prevents container from exiting immediately after script runs
-wait
+# Stop the MariaDB process
+mysqladmin shutdown -u root
+
+# Wait for mariadb to safely stop
+wait $!
+
+# Start MariaDB in the foreground (PID 1)
+exec mysqld_safe --datadir=/var/lib/mysql
